@@ -1,0 +1,29 @@
+datasource db {
+    provider = "mongodb"
+    url = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model User {
+    id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+    username           String   @unique
+    email              String   @unique
+    hashedPassword     String
+    salt               String
+    resetToken         String?
+    resetTokenExpiresAt DateTime?
+    friends            Friend[] @relation("UserFriends")
+    score Int
+}
+
+model Friend {
+    id       String  @id @default(auto()) @map("_id") @db.ObjectId
+    userId   String @db.ObjectId
+
+    user     User   @relation("UserFriends", fields: [userId], references: [id])
+}
+
+
