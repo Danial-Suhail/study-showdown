@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "ChatGPT Extension",
-  "description": "ChatGPT Extension",
-  "version": "1.0",
+  "name": "Study Showdown",
+  "description": "An engaging way to study!",
+  "version": "1.0.0",
   "action": {
     "default_popup": "./index.html",
     "default_icon": "./openai-avatar.png"
