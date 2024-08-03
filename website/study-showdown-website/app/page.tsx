@@ -10,6 +10,13 @@ const domain = process.env.NEXT_PUBLIC_AUTH0_DOMAIN;
 const clientId = process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID;
 
 export default function Home() {
+  const handleSignIn = () => {
+    console.log("Sign in button clicked");
+    window.location.href = "api/auth/login"
+  }
+
+
+
   return (
  
     <div className="absolute inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(125%_125%_at_50%_10%,#f30303_30%,#2005f2_100%)] text-white">
@@ -26,8 +33,7 @@ export default function Home() {
                       strings={['get motivated', 'study better', 'build discipline', 'make studying fun again']} 
                       typeSpeed={75} backSpeed={75} loop />
           <div className="absolute flex w-full justify-center mt-48 my-auto">
-          <Button buttonName={"Sign In"} />
-          <a href="/api/auth/login">Login</a>
+          <Button onClick={handleSignIn} buttonName={"Sign In"} />
           </div>
         </div>
         
