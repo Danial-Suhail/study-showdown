@@ -8,9 +8,10 @@ function App() {
   const [game, setGame] = useState(false);
   const [score, setScore] = useState(0);
   const [recentScore, setRecentScore] = useState(0);
+  const [remainingTime, setRemainingTime] = useState(900); // Timer set to 600 seconds (10 minutes)
 
   useEffect(() => {
-    // Retrieve the active tab URL, game state, and recent score from Chrome's storage on component mount
+    // Retrieve the active tab URL, game state, score, and recent score from Chrome's storage on component mount
     chrome.storage.local.get(['activeTabUrl', 'gameActive', 'score', 'recentScore'], function (data) {
       if (data.activeTabUrl) {
         setActiveTabUrl(data.activeTabUrl);
@@ -27,13 +28,30 @@ function App() {
     });
   }, []);
 
+  useEffect(() => {
+    let timer;
+    if (game) {
+      timer = setInterval(() => {
+        setRemainingTime(prevTime => {
+          if (prevTime <= 1) {
+            handleEnd();
+            return 0;
+          }
+          return prevTime - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [game]);
+
   function handleStart() {
     setGame(true);
     setScore(0);
+    setRemainingTime(600); // Reset timer to 10 minutes
     chrome.storage.local.set({ gameActive: true, score: 0 });
 
     // Set a timer for 10 minutes (600 seconds)
-    chrome.alarms.create('endGameTimer', { delayInMinutes: 1 });
+    chrome.alarms.create('endGameTimer', { delayInMinutes: 15 });
   }
 
   function handleEnd() {
@@ -50,6 +68,7 @@ function App() {
           <Container.Inner>
             <h2 className="text-black text-center">Welcome to the game!</h2>
             <p className="text-black text-center">Score: {score}</p>
+            <p className="text-black text-center">Time Remaining: {Math.floor(remainingTime / 60)}:{remainingTime % 60 < 10 ? '0' : ''}{remainingTime % 60}</p>
             <div className="flex justify-center mt-4">
               <button
                 onClick={handleEnd}
