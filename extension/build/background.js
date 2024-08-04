@@ -8,7 +8,7 @@ function handleTabChange() {
     const url = activeTab.url;
 
     // Check if the URL contains "khanacademy.org"
-    if (url.includes("khanacademy.org")) {
+    if (url.includes("khanacademy.org") || url.includes("codecademy") || url.includes("duolingo") || url.includes("learning.linkedin") || url.includes("skillshare")) {
       // Check if the URL has already been visited
       if (!visitedUrls.has(url)) {
         // If not, add to visited URLs and update score
