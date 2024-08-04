@@ -5,6 +5,10 @@ import { ReactTyped } from 'react-typed';
 import Sslogowhite from './components/sslogowhite';
 import Sslogoblack from './components/sslogoblack';
 import Button from './components/Button';
+// import SignupButton from './components/SignupButton';
+// import LoginButton from './components/LoginButton';
+import { Sign } from "crypto";
+
 
 const domain = process.env.NEXT_PUBLIC_AUTH0_DOMAIN;
 const clientId = process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID;
@@ -19,7 +23,7 @@ export default function Home() {
 
   return (
  
-    <div className="absolute inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(125%_125%_at_50%_10%,#f30303_30%,#2005f2_100%)] text-white">
+    <div className="absolute inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(125%_125%_at_50%_10%,#f30303_20%,#2005f2_100%)] text-white">
       <div className="relative max-w-[800px] mt-[-96px] w-full h-screen mx-auto text-center flex flex-col justify-center items-center">
         <div className="relative h-1/2 pt-4 w-full flex flex-col items-center justify-center">
           {/* <Sslogowhite /> */}
@@ -34,14 +38,11 @@ export default function Home() {
                       typeSpeed={75} backSpeed={75} loop />
           <div className="absolute flex w-full justify-center mt-48 my-auto">
           <Button onClick={handleSignIn} buttonName={"Get Started"} />
+          {/* <LoginButton /> */}
+          {/* <SignupButton /> */}
           </div>
         </div>
-        
-        
-      </div>
-
-
-      
+      </div>      
     </div>
 
   );
