@@ -1,6 +1,6 @@
 import type { Config } from "tailwindcss";
 
-const config: Config = {
+export default {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -16,10 +16,24 @@ const config: Config = {
       fontFamily: {
         custom: ['Pixelify Sans', 'sans-serif'],
       },
+      animation: {
+        'gradient-xy': 'gradient-xy 8s ease-in-out infinite',
+      },
+      keyframes: {
+        'gradient-xy': {
+          '0%, 100%': {
+                    'background-size':'400% 400%',
+                    'background-position': 'left center'
+                },
+                '50%': {
+                    'background-size':'200% 200%',
+                    'background-position': 'right center'
+                } 
+        },
+      },
     },
   },
   plugins: [
     require('tailwindcss-textshadow'),
   ],
-};
-export default config;
+} satisfies Config

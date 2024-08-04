@@ -1,10 +1,10 @@
 /*global chrome*/
 import "./App.css";
-import { Container } from './components/Container';
-import React, { useState, useEffect } from 'react';
+import { Container } from "./components/Container";
+import React, { useState, useEffect } from "react";
 
 function App() {
-  const [activeTabUrl, setActiveTabUrl] = useState('No URL captured yet.');
+  const [activeTabUrl, setActiveTabUrl] = useState("No URL captured yet.");
   const [game, setGame] = useState(false);
   const [score, setScore] = useState(0);
   const [recentScore, setRecentScore] = useState(0);
@@ -13,6 +13,42 @@ function App() {
   const [userName, setUserName] = useState('');
 
   useEffect(() => {
+    // Retrieve the active tab URL, game state, and recent score from Chrome's storage on component mount
+    chrome.storage.local.get(
+      ["activeTabUrl", "gameActive", "score", "recentScore"],
+      function (data) {
+        if (data.activeTabUrl) {
+          setActiveTabUrl(data.activeTabUrl);
+        }
+        if (data.gameActive !== undefined) {
+          setGame(data.gameActive);
+        }
+        if (data.score !== undefined) {
+          setScore(data.score);
+        }
+        if (data.recentScore !== undefined) {
+          setRecentScore(data.recentScore);
+        }
+      }
+    );
+    // Retrieve the active tab URL, game state, score, and recent score from Chrome's storage on component mount
+    chrome.storage.local.get(
+      ["activeTabUrl", "gameActive", "score", "recentScore"],
+      function (data) {
+        if (data.activeTabUrl) {
+          setActiveTabUrl(data.activeTabUrl);
+        }
+        if (data.gameActive !== undefined) {
+          setGame(data.gameActive);
+        }
+        if (data.score !== undefined) {
+          setScore(data.score);
+        }
+        if (data.recentScore !== undefined) {
+          setRecentScore(data.recentScore);
+        }
+      }
+    );
     // Retrieve the initial state from Chrome's storage
     chrome.storage.local.get(['activeTabUrl', 'gameActive', 'score', 'recentScore', 'userEmail', 'userName', 'remainingTime'], function (data) {
       if (data.activeTabUrl) {
@@ -69,7 +105,11 @@ function App() {
           <Container.Inner>
             <h2 className="text-black text-center">Welcome to the game!</h2>
             <p className="text-black text-center">Score: {score}</p>
-            <p className="text-black text-center">Time Remaining: {Math.floor(remainingTime / 60)}:{remainingTime % 60 < 10 ? '0' : ''}{remainingTime % 60}</p>
+            <p className="text-black text-center">
+              Time Remaining: {Math.floor(remainingTime / 60)}:
+              {remainingTime % 60 < 10 ? "0" : ""}
+              {remainingTime % 60}
+            </p>
             <div className="flex justify-center mt-4">
               <button
                 onClick={handleEnd}
@@ -84,9 +124,12 @@ function App() {
         <Container.Outer>
           <Container.Inner>
             <h2 className="text-black text-center">
-              An engaging way to study! Try your best to get the highest score on the leaderboards!
+              An engaging way to study! Try your best to get the highest score
+              on the leaderboards!
             </h2>
-            <p className="text-black text-center">Recent Score: {recentScore}</p>
+            <p className="text-black text-center">
+              Recent Score: {recentScore}
+            </p>
             <div className="flex justify-center mt-4">
               <button
                 onClick={handleStart}
@@ -96,7 +139,7 @@ function App() {
               </button>
             </div>
             <p className="text-black text-center">
-              Visit the{' '}
+              Visit the{" "}
               <a
                 href="https://studyshowdown.com"
                 target="_blank"
@@ -104,7 +147,7 @@ function App() {
                 className="text-blue-700 underline hover:text-blue-800"
               >
                 leaderboard
-              </a>{' '}
+              </a>{" "}
               to see how you rank!
             </p>
           </Container.Inner>

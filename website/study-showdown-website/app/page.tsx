@@ -1,17 +1,9 @@
 'use client'
 
-import Image from "next/image";
 import { ReactTyped } from 'react-typed';
-import Sslogowhite from './components/sslogowhite';
 import Sslogoblack from './components/sslogoblack';
 import Button from './components/Button';
-// import SignupButton from './components/SignupButton';
-// import LoginButton from './components/LoginButton';
-import { Sign } from "crypto";
-
-
-const domain = process.env.NEXT_PUBLIC_AUTH0_DOMAIN;
-const clientId = process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID;
+import './globals.css';
 
 export default function Home() {
   const handleSignIn = () => {
@@ -22,12 +14,12 @@ export default function Home() {
 
 
   return (
- 
-    <div className="absolute inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(125%_125%_at_50%_10%,#f30303_20%,#2005f2_100%)] text-white">
+    // <div className="absolute inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(125%_125%_at_50%_10%,#f30303_20%,#2005f2_100%)] text-white">
+    <div className='absolute inset-0 -z-10 h-full w-full bg-gradient-to-br from-[#f30303] to-[#2005f2] via-[#cf04ea] animate-gradient-xy'>
       <div className="relative max-w-[800px] mt-[-96px] w-full h-screen mx-auto text-center flex flex-col justify-center items-center">
-        <div className="relative h-1/2 pt-4 w-full flex flex-col items-center justify-center">
+        <div className="relative h-[58%] pt-24 w-full flex flex-col items-center justify-center">
           {/* <Sslogowhite /> */}
-          <Sslogoblack />
+          <Sslogoblack className="animate-bounce h-[24rem]"/>
           
         </div>
         <h1 className="md:text-7xl sm:text-6xl text-4xl font-bold font-custom md:drop-shadow-[8px_0_0_rgba(0,0,0,1)] sm:drop-shadow-[6px_0_0_rgba(0,0,0,1)] drop-shadow-[4px_0_0_rgba(0,0,0,1)]">Study Showdown</h1>
