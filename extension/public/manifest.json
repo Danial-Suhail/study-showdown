@@ -5,9 +5,9 @@
   "version": "1.0.0",
   "action": {
     "default_popup": "./index.html",
-    "default_icon": "./openai-avatar.png"
+    "default_icon": "./ss-logoblack.png"
   },
-  "permissions": ["tabs", "activeTab", "storage", "alarms"],
+  "permissions": ["tabs", "activeTab", "storage", "alarms", "identity"],
   "background": { 
     "service_worker": "background.js"
   }
