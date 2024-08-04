@@ -8,7 +8,7 @@ function App() {
   const [game, setGame] = useState(false);
   const [score, setScore] = useState(0);
   const [recentScore, setRecentScore] = useState(0);
-  const [remainingTime, setRemainingTime] = useState(900); // Timer set to 600 seconds (10 minutes)
+  const [remainingTime, setRemainingTime] = useState(60); // Timer set to 600 seconds (10 minutes)
 
   useEffect(() => {
     // Retrieve the active tab URL, game state, and recent score from Chrome's storage on component mount

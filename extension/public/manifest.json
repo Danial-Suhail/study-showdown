@@ -7,7 +7,7 @@
     "default_popup": "./index.html",
     "default_icon": "./ss-logoblack.png"
   },
-  "permissions": ["tabs", "activeTab", "storage", "alarms"],
+  "permissions": ["tabs", "activeTab", "storage", "alarms", "identity"],
   "background": { 
     "service_worker": "background.js"
   }
