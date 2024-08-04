@@ -7,8 +7,15 @@
     "default_popup": "./index.html",
     "default_icon": "./ss-logoblack.png"
   },
-  "permissions": ["tabs", "activeTab", "storage", "alarms"],
+  "permissions": ["tabs", "activeTab", "storage", "alarms", "identity"],
   "background": { 
     "service_worker": "background.js"
+  },
+  "oauth2": {
+    "client_id": "62022002458-90dq1ocomg3em2l3lsagvb535jl08qd0.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile"
+    ]
   }
 }

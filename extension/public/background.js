@@ -1,6 +1,7 @@
-/*global chrome*/
+/* global chrome */
 let visitedUrls = new Set(); // To track URLs that have been visited
 let bad = 0;
+
 // Object to store educational domains and their visit counts
 const educationalDomains = {
   "khanacademy.org": 0,
@@ -57,6 +58,31 @@ function handleTabChange() {
   });
 }
 
+// Function to handle user authentication and retrieve email and name
+function getUserInfo() {
+  chrome.identity.getAuthToken({ interactive: true }, function (token) {
+    if (chrome.runtime.lastError) {
+      console.log(chrome.runtime.lastError);
+      return;
+    }
+
+    fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json', {
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('User Info:', data);
+      chrome.storage.local.set({
+        userEmail: data.email,
+        userName: data.name
+      });
+    })
+    .catch(error => console.log(error));
+  });
+}
+
 // Listen for when the active tab changes
 chrome.tabs.onActivated.addListener(function (activeInfo) {
   handleTabChange();
@@ -69,12 +95,42 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 });
 
-// Listen for the alarm to end the game
-chrome.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === "endGameTimer") {
-    chrome.storage.local.set({ gameActive: false }, function () {
-      console.log("Game ended due to timer");
+// Timer management
+let timerInterval;
+
+function startTimer() {
+  chrome.storage.local.get(['remainingTime'], function (data) {
+    let remainingTime = data.remainingTime || 60;
+    timerInterval = setInterval(() => {
+      remainingTime -= 1;
+      chrome.storage.local.set({ remainingTime });
+
+      if (remainingTime <= 0) {
+        clearInterval(timerInterval);
+        chrome.storage.local.set({ gameActive: false, remainingTime: 60 });
+        console.log("Game ended due to timer");
+      }
+    }, 1000);
+  });
+}
+
+function stopTimer() {
+  clearInterval(timerInterval);
+  chrome.storage.local.set({ remainingTime: 60 });
+}
+
+// Listen for messages from the popup
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === 'startGame') {
+    chrome.storage.local.set({ gameActive: true, score: 0, remainingTime: 60 }, function () {
+      startTimer();
     });
+    chrome.alarms.create('endGameTimer', { delayInMinutes: 1 });
+  } else if (request.action === 'endGame') {
+    chrome.storage.local.set({ gameActive: false }, function () {
+      stopTimer();
+    });
+    chrome.alarms.clear('endGameTimer');
   }
 });
 
@@ -83,4 +139,14 @@ chrome.storage.local.get("gameActive", function (data) {
   if (!data.gameActive) {
     visitedUrls.clear();
   }
+});
+
+// Get user info on startup
+chrome.runtime.onStartup.addListener(() => {
+  getUserInfo();
+});
+
+// Get user info when the extension is installed
+chrome.runtime.onInstalled.addListener(() => {
+  getUserInfo();
 });
