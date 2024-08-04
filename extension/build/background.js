@@ -1,6 +1,6 @@
 /*global chrome*/
 let visitedUrls = new Set(); // To track URLs that have been visited
-
+let bad = 0;
 // Object to store educational domains and their visit counts
 const educationalDomains = {
   "khanacademy.org": 0,
@@ -45,6 +45,7 @@ function handleTabChange() {
         chrome.storage.local.set({ score: newScore });
         console.log(`New score: ${newScore}`);
       });
+      bad += 1;
     }
 
     // Update the last active URL in storage
@@ -52,6 +53,7 @@ function handleTabChange() {
 
     // Log domain visit counts
     console.log("Educational domain visit counts:", educationalDomains);
+    console.log("Bad domain visit counts:", bad);
   });
 }
 
