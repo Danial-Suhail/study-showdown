@@ -2,6 +2,7 @@
 import "./App.css";
 import { Container } from './components/Container';
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function App() {
   const [activeTabUrl, setActiveTabUrl] = useState('No URL captured yet.');
@@ -32,11 +33,22 @@ function App() {
     chrome.alarms.create('endGameTimer', { delayInMinutes: 10 });
   }
 
-  function handleEnd() {
+  async function handleEnd() {
     setGame(false);
     console.log('Final score:', score);
     chrome.storage.local.set({ gameActive: false });
     chrome.alarms.clear('endGameTimer');
+
+    // Send the score to the backend
+    try {
+      await axios.post('http://localhost:5000/api/scores', {
+        userId: 'your-user-id', // Replace with actual user identifier
+        score: score
+      });
+      console.log('Score updated successfully');
+    } catch (error) {
+      console.error('Error updating score:', error);
+    }
   }
 
   return (
