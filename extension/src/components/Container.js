@@ -21,7 +21,7 @@ const InnerContainer = forwardRef(function InnerContainer(
 		<div
 			ref={ref}
 			className={clsx(
-				"flex-col m-3 space-y-5 min-w-[400px] min-h-[400px]",
+				"flex-col m-3 space-y-5 min-w-[15rem] min-h-[20rem]",
 				className
 			)}
 			{...props}
