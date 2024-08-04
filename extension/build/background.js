@@ -3,7 +3,10 @@ function handleTabChange() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     if (tabs.length === 0) return; // No active tab found
     var activeTab = tabs[0];
-    console.log(activeTab);
+    console.log(activeTab.title);
+    chrome.storage.local.set({ title: activeTab.title }).then(() => {
+      console.log("Value is set");
+    });
   });
 }
 
