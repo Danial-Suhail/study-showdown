@@ -8,10 +8,8 @@ import './globals.css';
 export default function Home() {
   const handleSignIn = () => {
     console.log("Sign in button clicked");
-    window.location.href = "api/auth/login"
+    window.location.href = "api/auth/login?returnTo=http://localhost:3000/leaderboard"
   }
-
-
 
   return (
     // <div className="absolute inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(125%_125%_at_50%_10%,#f30303_20%,#2005f2_100%)] text-white">
