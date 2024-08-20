@@ -1,105 +1,108 @@
-/*global chrome*/
-import "./App.css";
+/* global chrome */
+import "./css/App.css";
 import { Container } from "./components/Container";
 import React, { useState, useEffect } from "react";
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs, updateDoc, doc } from "firebase/firestore";
+
+const firebaseConfig = {
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 function App() {
   const [activeTabUrl, setActiveTabUrl] = useState("No URL captured yet.");
   const [game, setGame] = useState(false);
   const [score, setScore] = useState(0);
   const [recentScore, setRecentScore] = useState(0);
-  const [remainingTime, setRemainingTime] = useState(60); // Timer set to 60 seconds (1 minute)
+  const [remainingTime, setRemainingTime] = useState(60);
   const [userEmail, setUserEmail] = useState('');
   const [userName, setUserName] = useState('');
 
   useEffect(() => {
-    // Retrieve the active tab URL, game state, and recent score from Chrome's storage on component mount
     chrome.storage.local.get(
-      ["activeTabUrl", "gameActive", "score", "recentScore"],
+      ["activeTabUrl", "gameActive", "score", "recentScore", "userEmail", "userName", "remainingTime"],
       function (data) {
-        if (data.activeTabUrl) {
-          setActiveTabUrl(data.activeTabUrl);
-        }
-        if (data.gameActive !== undefined) {
-          setGame(data.gameActive);
-        }
-        if (data.score !== undefined) {
-          setScore(data.score);
-        }
-        if (data.recentScore !== undefined) {
-          setRecentScore(data.recentScore);
-        }
+        if (data.activeTabUrl) setActiveTabUrl(data.activeTabUrl);
+        if (data.gameActive !== undefined) setGame(data.gameActive);
+        if (data.score !== undefined) setScore(data.score);
+        if (data.recentScore !== undefined) setRecentScore(data.recentScore);
+        if (data.userEmail) setUserEmail(data.userEmail);
+        if (data.userName) setUserName(data.userName);
+        if (data.remainingTime !== undefined) setRemainingTime(data.remainingTime);
       }
     );
-    // Retrieve the active tab URL, game state, score, and recent score from Chrome's storage on component mount
-    chrome.storage.local.get(
-      ["activeTabUrl", "gameActive", "score", "recentScore"],
-      function (data) {
-        if (data.activeTabUrl) {
-          setActiveTabUrl(data.activeTabUrl);
-        }
-        if (data.gameActive !== undefined) {
-          setGame(data.gameActive);
-        }
-        if (data.score !== undefined) {
-          setScore(data.score);
-        }
-        if (data.recentScore !== undefined) {
-          setRecentScore(data.recentScore);
-        }
-      }
-    );
-    // Retrieve the initial state from Chrome's storage
-    chrome.storage.local.get(['activeTabUrl', 'gameActive', 'score', 'recentScore', 'userEmail', 'userName', 'remainingTime'], function (data) {
-      if (data.activeTabUrl) {
-        setActiveTabUrl(data.activeTabUrl);
-      }
-      if (data.gameActive !== undefined) {
-        setGame(data.gameActive);
-      }
-      if (data.score !== undefined) {
-        setScore(data.score);
-      }
-      if (data.recentScore !== undefined) {
-        setRecentScore(data.recentScore);
-      }
-      if (data.userEmail) {
-        setUserEmail(data.userEmail);
-      }
-      if (data.userName) {
-        setUserName(data.userName);
-      }
-      if (data.remainingTime !== undefined) {
-        setRemainingTime(data.remainingTime);
-      }
-    });
 
-    // Listen for updates to the remaining time
+    // Listen for updates to the game state
     chrome.storage.onChanged.addListener((changes) => {
-      if (changes.remainingTime) {
-        setRemainingTime(changes.remainingTime.newValue);
-      }
-      if (changes.gameActive) {
-        setGame(changes.gameActive.newValue);
-      }
-      if (changes.score) {
-        setScore(changes.score.newValue);
-      }
+      if (changes.remainingTime) setRemainingTime(changes.remainingTime.newValue);
+      if (changes.gameActive) setGame(changes.gameActive.newValue);
+      if (changes.score) setScore(changes.score.newValue);
+      if (changes.recentScore) setRecentScore(changes.recentScore.newValue);
     });
   }, []);
+
+  async function handleEnd() {
+    try {
+      chrome.storage.local.get(["score", "userEmail", "userName"], async function (data) {
+        const recentScore = data.score || 0;
+        const userEmail = data.userEmail || '';
+        const userName = data.userName || '';
+  
+        // Check if a document with the same email already exists
+        const q = query(collection(db, "gameScores"), where("userEmail", "==", userEmail));
+        const querySnapshot = await getDocs(q);
+  
+        if (!querySnapshot.empty) {
+          // Document exists, so compare scores and update if the new score is higher
+          querySnapshot.forEach(async (docSnapshot) => {
+            const docRef = doc(db, "gameScores", docSnapshot.id);
+            const existingData = docSnapshot.data();
+  
+            if (recentScore > existingData.recentScore) {
+              await updateDoc(docRef, {
+                recentScore: recentScore,
+                timestamp: serverTimestamp(),
+              });
+              console.log("Game data updated in Firestore successfully!");
+            } else {
+              console.log("New score is not higher than the existing score. No update made.");
+            }
+          });
+        } else {
+          // Document does not exist, so create a new one
+          const gameData = {
+            userEmail: userEmail,
+            userName: userName,
+            recentScore: recentScore,
+            timestamp: serverTimestamp(),
+          };
+          await addDoc(collection(db, "gameScores"), gameData);
+          console.log("Game data saved to Firestore successfully!");
+        }
+  
+        chrome.runtime.sendMessage({ action: 'endGame' });
+      });
+    } catch (error) {
+      console.error("Error saving game data to Firestore:", error);
+    }
+  }
+  
 
   function handleStart() {
     chrome.runtime.sendMessage({ action: 'startGame' });
   }
 
-  function handleEnd() {
-    //put backend information here
-    
-    chrome.runtime.sendMessage({ action: 'endGame' });
-  }
-
   return (
-    <div className="">
+    <div>
       {game ? (
         <Container.Outer>
           <Container.Inner>
@@ -141,7 +144,7 @@ function App() {
             <p className="text-black text-center">
               Visit the{" "}
               <a
-                href="https://studyshowdown.com"
+                href="https://studyshowdown.com/leaderboard" /* Change the URL to your own domain once deployed */
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-700 underline hover:text-blue-800"

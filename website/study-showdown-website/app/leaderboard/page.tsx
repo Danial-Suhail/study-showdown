@@ -1,21 +1,45 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaHome } from 'react-icons/fa';
 import Image from 'next/image';
 import defaultPicture from '../icons/default-pfp.png';
 import { useUser } from '@auth0/nextjs-auth0/client';
+import LeaderboardTable from '../components/Leaderboard'; 
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import app from '../db/firebaseConfig'; 
+import firebase from 'firebase/compat/app';
 
-const Leaderboard = () => {
+interface GameScore {
+  recentScore: number;
+  timestamp: firebase.firestore.Timestamp;
+  userEmail: string;
+  userName: string;
+}
+
+const LeaderboardPage = () => {
   const { user, isLoading, error } = useUser();
+  const [data, setData] = useState<GameScore[]>([]);
 
-  const rows = [
-    { position: 1, name: 'John Doe', email: 'john@example.com', points: 95 },
-    { position: 2, name: 'Jane Smith', email: 'jane@example.com', points: 89 },
-    { position: 3, name: 'Alice Johnson', email: 'alice@example.com', points: 82 },
-    { position: 4, name: 'Bob Brown', email: 'bob@example.com', points: 76 },
-    { position: 5, name: 'Charlie Davis', email: 'charlie@example.com', points: 70 },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const db = getFirestore(app);
+        const scoresCollection = collection(db, 'gameScores');
+        const scoresSnapshot = await getDocs(scoresCollection);
+        const scoresList: GameScore[] = scoresSnapshot.docs.map(doc => doc.data() as GameScore);
+
+        // Sort the scoresList by recentScore in descending order
+        scoresList.sort((a, b) => b.recentScore - a.recentScore);
+
+        setData(scoresList);
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -44,41 +68,9 @@ const Leaderboard = () => {
       <a href="/api/auth/logout?returnTo=http://localhost:3000">
         <FaHome size={48} className='absolute top-0 right-0 m-4 rounded-2xl bg-black border-8 border-black hover:text-black hover:bg-white hover:border-white ease-in-out duration-500'/>
       </a>
-      <div className="overflow-x-auto w-[800px] mx-auto my-auto justify-center">
-        <table className="min-w-full divide-y-2 divide-white">
-          <thead className="">
-            <tr>
-              <th scope="col" className="px-6 py-3 text-left text-xl font-custom text-white uppercase tracking-wider">
-                Position
-              </th>
-              <th scope="col" className="px-6 py-3 text-left text-xl font-custom text-white uppercase tracking-wider">
-                Name / Email
-              </th>
-              <th scope="col" className="px-6 py-3 text-left text-xl font-custom text-white uppercase tracking-wider">
-                Points
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y-2 divide-white">
-            {rows.map((row, index) => (
-              <tr key={index}>
-                <td className="px-6 py-4 whitespace-nowrap opacity-80 hover:opacity-100 hover:bg-white hover:bg-opacity-20 ease-in-out duration-500">
-                  <div className="text-xl text-white font-custom">{row.position}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap opacity-80 hover:opacity-100 hover:bg-white hover:bg-opacity-20 ease-in-out duration-500">
-                  <div className="text-sm font-medium text-white">{row.name}</div>
-                  <div className="text-sm text-white">{row.email}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap opacity-80 hover:opacity-100 hover:bg-white hover:bg-opacity-20 ease-in-out duration-500 ">
-                  <div className="text-md text-white">{row.points}</div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <LeaderboardTable data={data} />
     </div>
   );
 };
 
-export default Leaderboard;
+export default LeaderboardPage;

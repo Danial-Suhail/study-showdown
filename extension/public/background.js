@@ -1,5 +1,5 @@
 /* global chrome */
-let visitedUrls = new Set(); // To track URLs that have been visited
+let visitedUrls = new Set(); 
 let bad = 0;
 
 // Object to store educational domains and their visit counts
@@ -11,7 +11,6 @@ const educationalDomains = {
   "skillshare": 0,
 };
 
-// Function to handle tab change
 function handleTabChange() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     if (tabs.length === 0) return; // No active tab found
@@ -58,11 +57,10 @@ function handleTabChange() {
   });
 }
 
-// Function to handle user authentication and retrieve email and name
 function getUserInfo() {
   chrome.identity.getAuthToken({ interactive: true }, function (token) {
     if (chrome.runtime.lastError) {
-      console.log(chrome.runtime.lastError);
+      console.error(chrome.runtime.lastError);
       return;
     }
 
@@ -73,13 +71,38 @@ function getUserInfo() {
     })
     .then(response => response.json())
     .then(data => {
-      console.log('User Info:', data);
+      if (data.email && data.name) {
       chrome.storage.local.set({
         userEmail: data.email,
         userName: data.name
-      });
+        });
+      console.log('User Email:', data.email);
+      console.log('User Name:', data.name);
+      } else {
+        console.error('Failed to retrieve email or name:', data);
+      }
     })
-    .catch(error => console.log(error));
+    .catch(error => console.error('Error fetching user info:', error));
+  });
+}
+
+function handleEndGame() {
+  chrome.storage.local.get(['score', 'userEmail', 'userName'], function (data) {
+    const recentScore = data.score || 0;
+    const userEmail = data.userEmail || '';
+    const userName = data.userName || '';
+
+    // Save these values to Chrome's storage to be accessed by the popup
+    chrome.storage.local.set({
+      recentScore: recentScore,
+      userEmail: userEmail,
+      userName: userName
+    });
+
+    // Log the values for debugging
+    console.log('Recent Score:', recentScore);
+    console.log('User Email:', userEmail);
+    console.log('User Name:', userName);
   });
 }
 
@@ -129,6 +152,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   } else if (request.action === 'endGame') {
     chrome.storage.local.set({ gameActive: false }, function () {
       stopTimer();
+      handleEndGame(); // Call handleEndGame to save score and user info
     });
     chrome.alarms.clear('endGameTimer');
   }

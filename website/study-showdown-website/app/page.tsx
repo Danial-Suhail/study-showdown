@@ -8,7 +8,7 @@ import './globals.css';
 export default function Home() {
   const handleSignIn = () => {
     console.log("Sign in button clicked");
-    window.location.href = "api/auth/login?returnTo=http://localhost:3000/leaderboard"
+    window.location.href = "api/auth/login?returnTo=http://localhost:3000/leaderboard"; {/* Change the "returnTo" URL to your own domain once deployed */}
   }
 
   return (

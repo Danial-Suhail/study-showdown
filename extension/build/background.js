@@ -73,13 +73,41 @@ function getUserInfo() {
     })
     .then(response => response.json())
     .then(data => {
-      console.log('User Info:', data);
+      if (data.email && data.name) {
       chrome.storage.local.set({
         userEmail: data.email,
         userName: data.name
-      });
+        });
+      console.log('User Email:', data.email);
+      console.log('User Name:', data.name);
+      } else {
+        console.error('Failed to retrieve email or name:', data);
+      }
     })
-    .catch(error => console.log(error));
+    .catch(error => console.error('Error fetching user info:', error));
+  });
+}
+
+// Function to handle the end of the game
+function handleEndGame() {
+  chrome.storage.local.get(['score', 'userEmail', 'userName'], function (data) {
+    const recentScore = data.score || 0;
+    const userEmail = data.userEmail || '';
+    const userName = data.userName || '';
+
+    // Save these values to Chrome's storage to be accessed by the popup
+    chrome.storage.local.set({
+      recentScore: recentScore,
+      userEmail: userEmail,
+      userName: userName
+    });
+
+    // Log the values for debugging
+    console.log('Recent Score:', recentScore);
+    console.log('User Email:', userEmail);
+    console.log('User Name:', userName);
+
+    // Optionally, you can perform any additional actions here, such as sending data to an external server
   });
 }
 
@@ -129,6 +157,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   } else if (request.action === 'endGame') {
     chrome.storage.local.set({ gameActive: false }, function () {
       stopTimer();
+      handleEndGame(); // Call handleEndGame to save score and user info
     });
     chrome.alarms.clear('endGameTimer');
   }
