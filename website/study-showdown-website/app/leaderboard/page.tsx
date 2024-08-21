@@ -37,7 +37,6 @@ const LeaderboardPage = () => {
         console.error("Error fetching data: ", error);
       }
     };
-
     fetchData();
   }, []);
 
@@ -65,7 +64,8 @@ const LeaderboardPage = () => {
           height={96}
         />
       </div>
-      <a href="/api/auth/logout?returnTo=http://localhost:3000">
+      ```
+            <a href="/api/auth/logout?returnTo=http://localhost:3000"> {/* Change the "returnTo" URL to your own domain once deployed */}
         <FaHome size={48} className='absolute top-0 right-0 m-4 rounded-2xl bg-black border-8 border-black hover:text-black hover:bg-white hover:border-white ease-in-out duration-500'/>
       </a>
       <LeaderboardTable data={data} />
