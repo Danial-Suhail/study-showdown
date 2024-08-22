@@ -30,6 +30,7 @@ next build
 6. Make sure the extension is turned on and press the reload button to update the extension.
 
 7. All Done!
-
-![Screenshot 2024-08-22 023500](https://github.com/user-attachments/assets/29dc2017-e09c-4a80-be90-7b0d085b7a94)
-
+<br></br>
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/29dc2017-e09c-4a80-be90-7b0d085b7a94" alt="Screenshot" width="500" height="500">
+</div>
