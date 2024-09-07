@@ -52,7 +52,7 @@ const LeaderboardPage = () => {
     <div className='absolute inset-0 -z-10 h-full w-full bg-gradient-to-b from-[#f30303] to-[#2005f2] via-[#cf04ea] animate-gradient-xy text-white justify-center'>
       <h1 className="md:text-7xl sm:text-6xl text-4xl font-bold font-custom md:drop-shadow-[8px_0_0_rgba(0,0,0,1)] 
                                                                           sm:drop-shadow-[6px_0_0_rgba(0,0,0,1)] 
-                                                                          drop-shadow-[4px_0_0_rgba(0,0,0,1)] text-center pt-14 my-8 md-8 ease-in-out duration-1000 animate-bounce h-18">
+                                                                          drop-shadow-[4px_0_0_rgba(0,0,0,1)] text-center pt-14 my-8 md-8 h-18">
         {user ? `Welcome, ${user.name}` : 'Leaderboard'}
       </h1>
       <div className="absolute top-4 left-4">

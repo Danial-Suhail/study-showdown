@@ -13,9 +13,9 @@ export default {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
-      fontFamily: {
-        custom: ['Pixelify Sans', 'sans-serif'],
-      },
+      // fontFamily: {
+      //   custom: ['Pixelify Sans', 'sans-serif'],
+      // },
       animation: {
         'gradient-xy': 'gradient-xy 8s ease-in-out infinite',
       },
