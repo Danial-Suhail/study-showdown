@@ -38,3 +38,11 @@ body {
     text-wrap: balance;
   }
 }
+
+@layer components {
+  .text-shadow {
+    text-shadow: 4px 4px 0 #000, -4px -4px 0 #000, 4px -4px 0 #000,
+      -4px 4px 0 #000;
+    color: white;
+  }
+}

@@ -1,8 +1,4 @@
 import type { Config } from "tailwindcss";
-import plugin from "tailwindcss/plugin";
-import { PluginAPI } from "tailwindcss/types/config";
-const flattenColorPalette = require("tailwindcss/src/util/flattenColorPalette");
-const toColorValue = require("tailwindcss/src/util/toColorValue");
 
 export default {
   content: [
@@ -12,6 +8,11 @@ export default {
   ],
   theme: {
     extend: {
+      textShadow: {
+        "border-black":
+          "2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000",
+      },
+
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
@@ -37,35 +38,6 @@ export default {
         },
       },
     },
-    plugins: [
-      plugin(function ({ matchUtilities, e, config, theme }: PluginAPI) {
-        const textBorderSize = `--tw${config("prefix")}-text-border-size`;
-
-        matchUtilities(
-          {
-            "text-border": (value) => ({
-              "text-shadow": `0 0 var(${textBorderSize},1px) ${toColorValue(
-                value
-              )}`,
-            }),
-          },
-          {
-            values: (({ DEFAULT: _, ...colors }) => colors)(
-              flattenColorPalette(theme("borderColor"))
-            ),
-            type: "color",
-          }
-        );
-
-        matchUtilities(
-          {
-            "text-border-size": (value) => ({
-              [textBorderSize]: value,
-            }),
-          },
-          { values: theme("borderWidth") }
-        );
-      }),
-    ],
+    plugins: [require("tailwindcss-textshadow")],
   },
 } satisfies Config;
