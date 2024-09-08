@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import React, { ReactNode } from 'react';
 import { UserProvider } from '@auth0/nextjs-auth0/client';
-// import Link from 'next/link';
+import Link from 'next/link';
 
 interface RootLayoutProps {
   children: ReactNode;
@@ -30,10 +30,10 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
   return (
     <html lang="en">
       <head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap"
-          rel="stylesheet"
-        />
+        
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com"/>
+        <link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet"/>
       </head>
         <UserProvider>
         <body className={inter.className}>{children}</body>

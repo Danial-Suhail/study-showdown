@@ -3,7 +3,17 @@ import "./css/App.css";
 import { Container } from "./components/Container";
 import React, { useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs, updateDoc, doc } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  serverTimestamp,
+  query,
+  where,
+  getDocs,
+  updateDoc,
+  doc,
+} from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -24,12 +34,20 @@ function App() {
   const [score, setScore] = useState(0);
   const [recentScore, setRecentScore] = useState(0);
   const [remainingTime, setRemainingTime] = useState(60);
-  const [userEmail, setUserEmail] = useState('');
-  const [userName, setUserName] = useState('');
+  const [userEmail, setUserEmail] = useState("");
+  const [userName, setUserName] = useState("");
 
   useEffect(() => {
     chrome.storage.local.get(
-      ["activeTabUrl", "gameActive", "score", "recentScore", "userEmail", "userName", "remainingTime"],
+      [
+        "activeTabUrl",
+        "gameActive",
+        "score",
+        "recentScore",
+        "userEmail",
+        "userName",
+        "remainingTime",
+      ],
       function (data) {
         if (data.activeTabUrl) setActiveTabUrl(data.activeTabUrl);
         if (data.gameActive !== undefined) setGame(data.gameActive);
@@ -37,13 +55,15 @@ function App() {
         if (data.recentScore !== undefined) setRecentScore(data.recentScore);
         if (data.userEmail) setUserEmail(data.userEmail);
         if (data.userName) setUserName(data.userName);
-        if (data.remainingTime !== undefined) setRemainingTime(data.remainingTime);
+        if (data.remainingTime !== undefined)
+          setRemainingTime(data.remainingTime);
       }
     );
 
     // Listen for updates to the game state
     chrome.storage.onChanged.addListener((changes) => {
-      if (changes.remainingTime) setRemainingTime(changes.remainingTime.newValue);
+      if (changes.remainingTime)
+        setRemainingTime(changes.remainingTime.newValue);
       if (changes.gameActive) setGame(changes.gameActive.newValue);
       if (changes.score) setScore(changes.score.newValue);
       if (changes.recentScore) setRecentScore(changes.recentScore.newValue);
@@ -52,53 +72,60 @@ function App() {
 
   async function handleEnd() {
     try {
-      chrome.storage.local.get(["score", "userEmail", "userName"], async function (data) {
-        const recentScore = data.score || 0;
-        const userEmail = data.userEmail || '';
-        const userName = data.userName || '';
-  
-        // Check if a document with the same email already exists
-        const q = query(collection(db, "gameScores"), where("userEmail", "==", userEmail));
-        const querySnapshot = await getDocs(q);
-  
-        if (!querySnapshot.empty) {
-          // Document exists, so compare scores and update if the new score is higher
-          querySnapshot.forEach(async (docSnapshot) => {
-            const docRef = doc(db, "gameScores", docSnapshot.id);
-            const existingData = docSnapshot.data();
-  
-            if (recentScore > existingData.recentScore) {
-              await updateDoc(docRef, {
-                recentScore: recentScore,
-                timestamp: serverTimestamp(),
-              });
-              console.log("Game data updated in Firestore successfully!");
-            } else {
-              console.log("New score is not higher than the existing score. No update made.");
-            }
-          });
-        } else {
-          // Document does not exist, so create a new one
-          const gameData = {
-            userEmail: userEmail,
-            userName: userName,
-            recentScore: recentScore,
-            timestamp: serverTimestamp(),
-          };
-          await addDoc(collection(db, "gameScores"), gameData);
-          console.log("Game data saved to Firestore successfully!");
+      chrome.storage.local.get(
+        ["score", "userEmail", "userName"],
+        async function (data) {
+          const recentScore = data.score || 0;
+          const userEmail = data.userEmail || "";
+          const userName = data.userName || "";
+
+          // Check if a document with the same email already exists
+          const q = query(
+            collection(db, "gameScores"),
+            where("userEmail", "==", userEmail)
+          );
+          const querySnapshot = await getDocs(q);
+
+          if (!querySnapshot.empty) {
+            // Document exists, so compare scores and update if the new score is higher
+            querySnapshot.forEach(async (docSnapshot) => {
+              const docRef = doc(db, "gameScores", docSnapshot.id);
+              const existingData = docSnapshot.data();
+
+              if (recentScore > existingData.recentScore) {
+                await updateDoc(docRef, {
+                  recentScore: recentScore,
+                  timestamp: serverTimestamp(),
+                });
+                console.log("Game data updated in Firestore successfully!");
+              } else {
+                console.log(
+                  "New score is not higher than the existing score. No update made."
+                );
+              }
+            });
+          } else {
+            // Document does not exist, so create a new one
+            const gameData = {
+              userEmail: userEmail,
+              userName: userName,
+              recentScore: recentScore,
+              timestamp: serverTimestamp(),
+            };
+            await addDoc(collection(db, "gameScores"), gameData);
+            console.log("Game data saved to Firestore successfully!");
+          }
+
+          chrome.runtime.sendMessage({ action: "endGame" });
         }
-  
-        chrome.runtime.sendMessage({ action: 'endGame' });
-      });
+      );
     } catch (error) {
       console.error("Error saving game data to Firestore:", error);
     }
   }
-  
 
   function handleStart() {
-    chrome.runtime.sendMessage({ action: 'startGame' });
+    chrome.runtime.sendMessage({ action: "startGame" });
   }
 
   return (
@@ -144,7 +171,7 @@ function App() {
             <p className="text-black text-center">
               Visit the{" "}
               <a
-                href="https://studyshowdown.com/leaderboard" /* Change the URL to your own domain once deployed */
+                href="localhost:3000/leaderboard" /* Change the URL to "https://study-showdown.vercel.app/leaderboard" once deployed */
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-700 underline hover:text-blue-800"
