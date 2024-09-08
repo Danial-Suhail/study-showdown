@@ -1,5 +1,3 @@
-Website: https://study-showdown-website.vercel.app
-<br></br>
 ## Getting Started
 Extension Instructions:
 Unfortunately, this extension has yet to be ready for production and released to the CWS (Chrome Web Store).
