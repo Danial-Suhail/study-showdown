@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Jersey+10&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Jersey+10&display=swap');
 
 .animated-gradient {
   background-size: 200% 200%;
@@ -40,9 +40,30 @@ body {
 }
 
 @layer components {
-  .text-shadow {
-    text-shadow: 4px 4px 0 #000, -4px -4px 0 #000, 4px -4px 0 #000,
+  .text-border {
+    text-shadow:
+      4px 4px 0 #000,
+      -4px -4px 0 #000,
+      4px -4px 0 #000,
       -4px 4px 0 #000;
     color: white;
+  }
+
+  .text-stylized1 {
+    text-shadow:
+      3.4px 3.4px 0 darkgray,
+      -3.4px -3.4px 0 white,
+      3.4px -3.4px 0 darkgray,
+      -3.4px 3.4px 0 white;
+    color: black;
+  }
+
+  .text-stylized2 {
+    text-shadow:
+      3.4px 3.4px 0 #05abb1,
+      -3.4px -3.4px 0 white,
+      3.4px -3.4px 0 #05abb1,
+      -3.4px 3.4px 0 white;
+    color: #ccf7f8;
   }
 }

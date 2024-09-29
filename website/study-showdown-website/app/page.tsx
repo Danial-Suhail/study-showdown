@@ -13,10 +13,15 @@ export default function Home() {
 
   return (
     // <div className="absolute inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(125%_125%_at_50%_10%,#f30303_20%,#2005f2_100%)] text-white">
-    <div className='absolute inset-0 -z-10 h-[100%] w-full bg-neutral-500 '>
+    // <div className='absolute inset-0 -z-10 h-[100%] w-full bg-neutral-500 '>
+
+
+    <div>
+    <div className="opacity-10 absolute inset-0 bg-black"></div>
+    <div className="bg-cover dark-overlay bg-[url('../public/images/study-showdown-wallpaper.png')]"> 
       <Navbar />
       <div className="relative max-w-[70%] w-full h-screen mx-auto text-center flex flex-col justify-center items-center">
-        <h1 className='text-9xl font-bold mt-48 font-jersey tracking-wider text-shadow'>Study Showdown</h1>
+        <h1 className='text-9xl font-bold mt-48 font-jersey tracking-wider text-stylized1'>Study Showdown</h1>
           
         <div className='flex justify-center item-center mt-4 font-medium tracking-wider text-4xl'>
           <p className="flex font-jersey ">helping you</p>
@@ -31,7 +36,8 @@ export default function Home() {
           {/* <SignupButton /> */}
         </div>
       </div>
-    </div>      
+    </div>     
+    </div>
 
   );
 }
