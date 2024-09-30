@@ -30,8 +30,9 @@ export default function Home() {
                       typeSpeed={75} backSpeed={75} loop />
           
         </div>
-          <div className="flex w-full justify-center mt-48 my-auto">
+          <div className="flex w-full justify-center mt-32 my-auto">
           <Button onClick={handleSignIn} buttonName={"Get Started"} />
+          {/* <button className='text-4xl'>amongus</button> */}
           {/* <LoginButton /> */}
           {/* <SignupButton /> */}
         </div>
