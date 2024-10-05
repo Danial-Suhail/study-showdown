@@ -21,7 +21,7 @@ export default function Home() {
     <div className="bg-cover dark-overlay bg-[url('../public/images/study-showdown-wallpaper.png')]"> 
       <Navbar />
       <div className="relative max-w-[70%] w-full h-screen mx-auto text-center flex flex-col justify-center items-center">
-        <h1 className='text-9xl font-bold mt-48 font-jersey tracking-wider text-stylized1'>Study Showdown</h1>
+        <h1 className='text-8xl font-bold mt-48 tracking-wider font-brkreg text-stylized1'>Study Showdown</h1>
           
         <div className='flex justify-center item-center mt-4 font-medium tracking-wider text-4xl'>
           <p className="flex font-jersey ">helping you</p>

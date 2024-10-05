@@ -4,6 +4,8 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Jersey+10&display=swap');
 
+
+
 .animated-gradient {
   background-size: 200% 200%;
   background-image: linear-gradient(270deg, #ff7e5f, #feb47b, #ff7e5f, #feb47b);
@@ -26,44 +28,94 @@
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
+    to bottom,
+    transparent,
+    rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
   }
-}
-
-@layer components {
-  .text-border {
-    text-shadow:
+  
+  @layer utilities {
+    .text-balance {
+      text-wrap: balance;
+    }
+  }
+  
+  @layer components {
+    .text-border {
+      text-shadow:
       4px 4px 0 #000,
       -4px -4px 0 #000,
       4px -4px 0 #000,
       -4px 4px 0 #000;
-    color: white;
-  }
-
-  .text-stylized1 {
-    text-shadow:
+      color: white;
+    }
+    
+    .text-stylized1 {
+      text-shadow:
       3.4px 3.4px 0 darkgray,
       -3.4px -3.4px 0 white,
       3.4px -3.4px 0 darkgray,
       -3.4px 3.4px 0 white;
-    color: black;
-  }
-
-  .text-stylized2 {
-    text-shadow:
+      color: black;
+    }
+    
+    .text-stylized2 {
+      text-shadow:
       3.4px 3.4px 0 #05abb1,
       -3.4px -3.4px 0 white,
       3.4px -3.4px 0 #05abb1,
       -3.4px 3.4px 0 white;
-    color: #ccf7f8;
+      color: #ccf7f8;
+    }
   }
+  
+/* Font Face to use in TailwindCSS */
+@font-face {
+  font-family: "Phatone";
+  src: url("../public/fonts/phatone.otf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Medabots";
+  src: url("../public/fonts/medabots.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Small-Hollows";
+  src: url("../public/fonts/smallhollows.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Pixel3";
+  src: url("../public/fonts/pixel3.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "BRKREG";
+  src: url("../public/fonts/brk-reg.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "BRKDOTTED";
+  src: url("../public/fonts/brk-dotted.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "BRKDASHED";
+  src: url("../public/fonts/brk-dashed.ttf");
+  font-weight: normal;
+  font-style: normal;
 }
