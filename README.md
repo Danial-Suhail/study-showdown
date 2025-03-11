@@ -4,7 +4,7 @@ Extension Instructions:
 Unfortunately, this extension has yet to be ready for production and released to the CWS (Chrome Web Store).
 To test the current extension please follow the instructions below:
 
-1. Include Environment Variables (.env) into both application directories (website, extension).
+1. Include Environment Variables (.env) for Firebase (firestore) and Auth0 credentials into both application directories (website, extension).
 
 2. Install NPM packages:
 
