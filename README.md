@@ -1,3 +1,4 @@
+https://github.com/user-attachments/assets/ded112d6-633d-4d97-bf2f-c0582194a9a0
 ## Getting Started
 Extension Instructions:
 Unfortunately, this extension has yet to be ready for production and released to the CWS (Chrome Web Store).
